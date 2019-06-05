@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/pixpainter
+pixpainter.so
+pixpainter.dylib
+pixpainter.dll
+pixpainter.a
+pixpainter.lib
+pixpainter-test-*
+*.exe
+*.o
+*.obj
+*.lst

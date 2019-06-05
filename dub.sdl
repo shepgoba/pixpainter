@@ -1,0 +1,6 @@
+name "pixpainter"
+description "Free and open source pixel art tool"
+authors "Dhillon Wilkinson"
+copyright "Copyright © 2019, Dhillon Wilkinson"
+license "proprietary"
+dependency "derelict-sdl2" version="~>2.1.4"
