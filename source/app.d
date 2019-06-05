@@ -16,23 +16,24 @@ private __gshared Editor editorInstance;
 
 void main()
 {
-	// Load SDL2
-	DerelictSDL2.load();
-  DerelictSDL2ttf.load();
-  TTF_Init();
+    // Load SDL2
+    DerelictSDL2.load();
+    DerelictSDL2ttf.load();
 
-	sdlMain();
+    sdlMain();
 }
 
 void sdlMain()
 {
-	SDL_Init(SDL_INIT_VIDEO);
-	window = SDL_CreateWindow("pixpainter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
+  
+    window = SDL_CreateWindow("pixpainter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 
 	if (window == null) 
 	{
-		writefln("Could not create window: %s", SDL_GetError());
-		return;
+	   writefln("Could not create window: %s", SDL_GetError());
+	   return;
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -44,25 +45,25 @@ void sdlMain()
 
 	while (!hasQuit)
 	{
-		SDL_Event event;
-		while(SDL_PollEvent(&event))
-		{
-			// Pump events from the event queue
-			if (event.type == SDL_QUIT) {
-				hasQuit = true;
-			}
-		}
+        SDL_Event event;
+        while(SDL_PollEvent(&event))
+        {
+            // Pump events from the event queue
+            if (event.type == SDL_QUIT) {
+                hasQuit = true;
+            }
+        }
 
-		// Render other stuff here
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        // Render other stuff here
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
 		button.render(renderer);
 
 		SDL_RenderPresent(renderer);
-	}
+    }
 
-	// Clean up
-	SDL_DestroyWindow(window);
+    // Clean up
+    SDL_DestroyWindow(window);
 	SDL_Quit();
 }
