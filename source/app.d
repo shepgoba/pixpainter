@@ -1,5 +1,6 @@
 import std.stdio;
 import derelict.sdl2.sdl;
+import derelict.sdl2.ttf;
 
 import editor.editor : Editor;
 import editor.color;
@@ -17,6 +18,8 @@ void main()
 {
 	// Load SDL2
 	DerelictSDL2.load();
+  DerelictSDL2ttf.load();
+  TTF_Init();
 
 	sdlMain();
 }
@@ -34,6 +37,11 @@ void sdlMain()
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+    PushButton button = new PushButton();
+    button.position = Point(64, 64);
+    button.size = Size(200, 40);
+    button.text = "Hello World";
+
 	while (!hasQuit)
 	{
 		SDL_Event event;
@@ -49,10 +57,6 @@ void sdlMain()
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
-		PushButton button = new PushButton();
-		button.position = Point(64, 64);
-		button.size = Size(100, 32);
-		button.text = "Hello World";
 		button.render(renderer);
 
 		SDL_RenderPresent(renderer);
