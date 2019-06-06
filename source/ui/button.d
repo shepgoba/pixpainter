@@ -5,7 +5,6 @@ enum ButtonState
 {
     normal,
     pressed,
-    disabled
 }
 
 class Button
