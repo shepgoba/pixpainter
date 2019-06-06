@@ -1,5 +1,6 @@
 import std.stdio;
 import derelict.sdl2.sdl;
+import derelict.sdl2.ttf;
 
 import editor.editor : Editor;
 import editor.color;
@@ -15,50 +16,54 @@ private __gshared Editor editorInstance;
 
 void main()
 {
-	// Load SDL2
-	DerelictSDL2.load();
+    // Load SDL2
+    DerelictSDL2.load();
+    DerelictSDL2ttf.load();
 
-	sdlMain();
+    sdlMain();
 }
 
 void sdlMain()
 {
-	SDL_Init(SDL_INIT_VIDEO);
-	window = SDL_CreateWindow("pixpainter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
+  
+    window = SDL_CreateWindow("pixpainter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 
 	if (window == null) 
 	{
-		writefln("Could not create window: %s", SDL_GetError());
-		return;
+	   writefln("Could not create window: %s", SDL_GetError());
+	   return;
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+    PushButton button = new PushButton();
+    button.position = Point(64, 64);
+    button.size = Size(200, 40);
+    button.text = "Hello World";
+
 	while (!hasQuit)
 	{
-		SDL_Event event;
-		while(SDL_PollEvent(&event))
-		{
-			// Pump events from the event queue
-			if (event.type == SDL_QUIT) {
-				hasQuit = true;
-			}
-		}
+        SDL_Event event;
+        while(SDL_PollEvent(&event))
+        {
+            // Pump events from the event queue
+            if (event.type == SDL_QUIT) {
+                hasQuit = true;
+            }
+        }
 
-		// Render other stuff here
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        // Render other stuff here
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
-		PushButton button = new PushButton();
-		button.position = Point(64, 64);
-		button.size = Size(100, 32);
-		button.text = "Hello World";
 		button.render(renderer);
 
 		SDL_RenderPresent(renderer);
-	}
+    }
 
-	// Clean up
-	SDL_DestroyWindow(window);
+    // Clean up
+    SDL_DestroyWindow(window);
 	SDL_Quit();
 }
