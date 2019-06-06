@@ -17,6 +17,7 @@ import editor.color;
  * It can be given a custom action to execute when pressed, and handles state updates
  * with the main event loop.
 **/
+
 class PushButton : Button
 {
     private string _text = "Button";
@@ -26,8 +27,7 @@ class PushButton : Button
     private Size _size = Size(200, 50);
     private ButtonState _buttonState = ButtonState.normal;
 
-    /// Font used for the button title
-    private TTF_Font* _titleFont;
+    private SDL_Texture* titleLabelTexture;
 
     /// Getter and setter for text
     @property string text() { return _text; }
@@ -48,18 +48,49 @@ class PushButton : Button
     /// Getter for button state
     @property ButtonState buttonState() { return _buttonState; }
 
-    override void render(SDL_Renderer* context)
+    override void initialize(SDL_Renderer* context)
     {
-        if (_lastKnownTextSize != _textSize) {
-            _titleFont = TTF_OpenFont(toStringz(buildPath(getcwd(), "resources/fonts/nokiafc22.ttf")), _textSize);
-            _lastKnownTextSize = _textSize;
+        SDL_Color titleColor = Color(0, 0, 0, 255).toSDL;
+
+        // Font used for the button title
+        TTF_Font* titleFont = TTF_OpenFont(toStringz(buildPath(getcwd(), "resources/fonts/nokiafc22.ttf")), _textSize);
+        if (titleFont == null) {
+            // TODO: Add error handling
+            writeln("Font file not found");
+            return;
+        } 
+
+        // Surface with button title text
+        SDL_Surface *titleSurface = TTF_RenderText_Blended(titleFont, toStringz(text), titleColor);
+        if (titleSurface == null) {
+            // TODO: Add error handling
+            writeln("Error loading button title text surface");
+            return;
+        } 
+
+        // Texture from button title surface
+        titleLabelTexture = SDL_CreateTextureFromSurface(context, titleSurface);
+        if (titleLabelTexture == null) {
+            // TODO: Add error handling
+            writeln("Error creating button title surface texture");
+            return;
         }
 
-        if (buttonState == ButtonState.normal) {
+        // Clean up
+        SDL_FreeSurface(titleSurface);
+        TTF_CloseFont(titleFont);
+    }
+
+    override void render(SDL_Renderer* context)
+    {
+
+        if (buttonState == ButtonState.normal)
+        {
             // Normal state
             SDL_SetRenderDrawColor(context, 196, 196, 196, 255);
         }
-        else if (buttonState == ButtonState.pressed) {
+        else if (buttonState == ButtonState.pressed)
+        {
             // Pressed state
             SDL_SetRenderDrawColor(context, 249, 192, 0, 255);
         }
@@ -68,26 +99,16 @@ class PushButton : Button
         SDL_Rect rect = {x: position.x, y: position.y, w: size.w, h: size.h};
         SDL_RenderFillRect(context, &rect);
 
-        // Drawing the title
-        SDL_Color titleColor = Color(0, 0, 0, 255).toSDL;
-
-        if (_titleFont == null) {
-            // TODO: Add error handling
-            writefln("Font file not found");
-            return;
-        }
-
-        SDL_Surface* titleSurface = TTF_RenderText_Solid(_titleFont, toStringz(text), titleColor);
+        int textureWidth, textureHeight;
+        SDL_QueryTexture(titleLabelTexture, null, null, &textureWidth, &textureHeight);
 
         // Calculate the position of the text to center it, kudos to harrie
-        immutable int offsetX = ((rect.w - titleSurface.w) / 2) + rect.x;
-        immutable int offsetY = ((rect.h - titleSurface.h) / 2) + rect.y;
+        immutable int offsetX = ((rect.w - textureWidth) / 2) + rect.x;
+        immutable int offsetY = ((rect.h - textureHeight) / 2) + rect.y;
 
-        SDL_Rect titlePosition = {x: offsetX, y: offsetY, w: titleSurface.w, h: titleSurface.h};
-        SDL_Texture* titleLabelTexture = SDL_CreateTextureFromSurface(context, titleSurface);
+        SDL_Rect titlePosition = {x: offsetX, y: offsetY, w: textureWidth, h: textureHeight};
+
         SDL_RenderCopy(context, titleLabelTexture, null, &titlePosition);
-        SDL_FreeSurface(titleSurface);
-        SDL_DestroyTexture(titleLabelTexture);
 
     }
 
@@ -116,5 +137,10 @@ class PushButton : Button
             // Reset the button state on mouse up
             _buttonState = ButtonState.normal;
         }
+    }
+
+    override void cleanup()
+    {
+        SDL_DestroyTexture(titleLabelTexture);
     }
 }

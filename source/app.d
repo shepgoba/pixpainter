@@ -27,21 +27,21 @@ void sdlMain()
 {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
-  
+
     window = SDL_CreateWindow("pixpainter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL);
 
-	if (window == null) 
-	{
-	   writefln("Could not create window: %s", SDL_GetError());
-	   return;
-	}
+    if (window == null) 
+    {
+        writefln("Could not create window: %s", SDL_GetError());
+        return;
+    }
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     createUI();
 
-	while (!hasQuit)
-	{
+    while (!hasQuit)
+    {
         SDL_Event event;
         while(SDL_PollEvent(&event))
         {
@@ -49,22 +49,18 @@ void sdlMain()
             if (event.type == SDL_QUIT) {
                 hasQuit = true;
             }
-
-            //button.processEvents(&event);
         }
 
         // Render other stuff here
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderClear(renderer);
+        SDL_RenderClear(renderer);
 
-		//button.render(renderer);
-
-		SDL_RenderPresent(renderer);
+        SDL_RenderPresent(renderer);
     }
 
     // Clean up
     SDL_DestroyWindow(window);
-	SDL_Quit();
+    SDL_Quit();
 }
 
 void createUI()
@@ -74,5 +70,4 @@ void createUI()
     button.size = Size(100, 24);
     button.text = "Hello World";
     button.textSize = 11;
-    button.updateProperties;
 }
