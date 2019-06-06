@@ -19,14 +19,15 @@ import editor.color;
 **/
 class PushButton : Button
 {
-    private string _text;
-    private int _textSize;
-    private Point _position;
-    private Size _size;
-    private ButtonState _buttonState;
+    private string _text = "Button";
+    private int _textSize = 16;
+    private int _lastKnownTextSize;
+    private Point _position = Point(0, 0);
+    private Size _size = Size(200, 50);
+    private ButtonState _buttonState = ButtonState.normal;
 
     /// Font used for the button title
-    private TTF_Font* titleFont;
+    private TTF_Font* _titleFont;
 
     /// Getter and setter for text
     @property string text() { return _text; }
@@ -47,23 +48,13 @@ class PushButton : Button
     /// Getter for button state
     @property ButtonState buttonState() { return _buttonState; }
 
-    this()
-    {
-        // TODO: Notify when loop has ended to destroy font
-        titleFont = TTF_OpenFont(toStringz(buildPath(getcwd(), "resources/fonts/nokiafc22.ttf")), 12);
-
-        _buttonState = ButtonState.normal;
-    }
-
-    void updateProperties()
-    {
-        // Update the font size in here, since we cannot call this in the render loop for obvious reasoning.
-        // IMPROVE: Find a way (if its possible), to allow for automatically assigning to textSize and updating it.
-        titleFont = TTF_OpenFont(toStringz(buildPath(getcwd(), "resources/fonts/nokiafc22.ttf")), textSize);
-    }
-
     override void render(SDL_Renderer* context)
     {
+        if (_lastKnownTextSize != _textSize) {
+            _titleFont = TTF_OpenFont(toStringz(buildPath(getcwd(), "resources/fonts/nokiafc22.ttf")), _textSize);
+            _lastKnownTextSize = _textSize;
+        }
+
         if (buttonState == ButtonState.normal) {
             // Normal state
             SDL_SetRenderDrawColor(context, 196, 196, 196, 255);
@@ -80,13 +71,13 @@ class PushButton : Button
         // Drawing the title
         SDL_Color titleColor = Color(0, 0, 0, 255).toSDL;
 
-        if (titleFont == null) {
+        if (_titleFont == null) {
             // TODO: Add error handling
             writefln("Font file not found");
             return;
         }
 
-        SDL_Surface* titleSurface = TTF_RenderText_Solid(titleFont, toStringz(text), titleColor);
+        SDL_Surface* titleSurface = TTF_RenderText_Solid(_titleFont, toStringz(text), titleColor);
 
         // Calculate the position of the text to center it, kudos to harrie
         immutable int offsetX = ((rect.w - titleSurface.w) / 2) + rect.x;
