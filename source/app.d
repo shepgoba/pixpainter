@@ -38,13 +38,22 @@ void sdlMain()
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    createUI();
+    // TODO: Remove later
+    PushButton button = new PushButton();
+    button.position = Point(64, 64);
+    button.size = Size(100, 24);
+    button.text = "Hello World";
+    button.textSize = 11;
+    button.initialize(renderer);
 
     while (!hasQuit)
     {
         SDL_Event event;
         while(SDL_PollEvent(&event))
         {
+
+            button.processEvents(&event);
+
             // Pump events from the event queue
             if (event.type == SDL_QUIT) {
                 hasQuit = true;
@@ -55,19 +64,14 @@ void sdlMain()
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
+        button.render(renderer);
+
         SDL_RenderPresent(renderer);
     }
 
     // Clean up
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
-}
-
-void createUI()
-{
-    PushButton button = new PushButton();
-    button.position = Point(64, 64);
-    button.size = Size(100, 24);
-    button.text = "Hello World";
-    button.textSize = 11;
 }
