@@ -13,7 +13,7 @@ import editor.color;
 /**
  * A simple label class that has customizable text, position, text size, text color and background color
  * 
-**/
+ */
 
 class Label
 {
@@ -74,7 +74,8 @@ class Label
     {
         //Font to use for text
         TTF_Font* textFont = TTF_OpenFont(toStringz(buildPath(getcwd(), "resources/fonts/nokiafc22.ttf")), _textSize);
-        if (textFont == null) {
+        if (textFont == null)
+        {
             // TODO: Add error handling
             writeln("Font file not found");
             return;
@@ -82,22 +83,26 @@ class Label
 
         SDL_Surface* textSurface;
 
-        //check if a background color has been defined. If so, we render it with a background; otherwise, just render the text
-        if (backgroundColor == Color()) {
+        // Check if a background color has been defined. If so, we render it with a background; otherwise, just render the text
+        if (backgroundColor == Color())
+        {
             textSurface = TTF_RenderText_Blended(textFont, toStringz(text), textColor.toSDL);
         }
-        else {
+        else
+        {
             textSurface = TTF_RenderText_Shaded(textFont, toStringz(text), textColor.toSDL, backgroundColor.toSDL);
         }
         
-        if (textSurface == null) {
+        if (textSurface == null)
+        {
             // TODO: Add error handling
             writeln("Error loading label text surface");
             return;
         } 
 
         textTexture = SDL_CreateTextureFromSurface(context, textSurface);
-        if (textTexture == null) {
+        if (textTexture == null)
+        {
             // TODO: Add error handling
             writeln("Error loading label text texture");
             return;
@@ -109,7 +114,7 @@ class Label
 
     void render(SDL_Renderer* context)
     {
-        //Get text width and height automatically (no need for a Size variable)
+        // Get text width and height automatically (no need for a Size variable)
         int textTextureWidth, textTextureHeight;
         SDL_QueryTexture(textTexture, null, null, &textTextureWidth, &textTextureHeight);
 

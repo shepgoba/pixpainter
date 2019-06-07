@@ -16,7 +16,7 @@ import editor.color;
  * 
  * It can be given a custom action to execute when pressed, and handles state updates
  * with the main event loop.
-**/
+ */
 
 class PushButton : Button
 {
