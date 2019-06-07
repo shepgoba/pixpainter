@@ -7,6 +7,7 @@ import editor.color;
 
 import ui.units;
 import ui.pushbutton;
+import ui.label;
 
 private __gshared SDL_Window* window;
 private __gshared SDL_Renderer* renderer;
@@ -39,12 +40,13 @@ void sdlMain()
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // TODO: Remove later
-    PushButton button = new PushButton();
-    button.position = Point(64, 64);
-    button.size = Size(100, 24);
-    button.text = "Hello World";
-    button.textSize = 11;
+    PushButton button = new PushButton("Hello World", Point(64, 64), Size(100, 24), 11);
+    Label aLabel = new Label("I am a label", Point(300, 50), 24, Color(0, 255, 0, 255), Color(100, 100, 100));
+    Label anotherLabel = new Label("I am also a label", Point(50, 300), 16, Color(255, 0, 0, 255));
+
     button.initialize(renderer);
+    aLabel.initialize(renderer);
+    anotherLabel.initialize(renderer);
 
     while (!hasQuit)
     {
@@ -65,10 +67,15 @@ void sdlMain()
         SDL_RenderClear(renderer);
 
         button.render(renderer);
-
+        aLabel.render(renderer);
+        anotherLabel.render(renderer);
         SDL_RenderPresent(renderer);
     }
 
+    button.cleanup();
+    aLabel.cleanup();
+    anotherLabel.cleanup();
+    
     // Clean up
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

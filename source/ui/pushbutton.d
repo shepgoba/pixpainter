@@ -16,7 +16,7 @@ import editor.color;
  * 
  * It can be given a custom action to execute when pressed, and handles state updates
  * with the main event loop.
-**/
+ */
 
 class PushButton : Button
 {
@@ -47,6 +47,21 @@ class PushButton : Button
 
     /// Getter for button state
     @property ButtonState buttonState() { return _buttonState; }
+
+    // Add an option to not initialize at instantiation
+    this()
+    {
+
+    }
+
+    // Add an option to initialize at instantiation
+    this(string text, Point position, Size size, int textSize)
+    {
+        this.text = text;
+        this.position = position;
+        this.size = size;
+        this.textSize = textSize;
+    }
 
     override void initialize(SDL_Renderer* context)
     {
