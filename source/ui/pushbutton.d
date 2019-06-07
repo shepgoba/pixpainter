@@ -48,6 +48,21 @@ class PushButton : Button
     /// Getter for button state
     @property ButtonState buttonState() { return _buttonState; }
 
+    // Add an option to not initialize at instantiation
+    this()
+    {
+
+    }
+
+    // Add an option to initialize at instantiation
+    this(string text, Point position, Size size, int textSize)
+    {
+        this.text = text;
+        this.position = position;
+        this.size = size;
+        this.textSize = textSize;
+    }
+
     override void initialize(SDL_Renderer* context)
     {
         SDL_Color titleColor = Color(0, 0, 0, 255).toSDL;
